@@ -3,6 +3,8 @@ package com.curso.ecommerce.controller;
 import com.curso.ecommerce.model.DetalleOrden;
 import com.curso.ecommerce.model.Orden;
 import com.curso.ecommerce.model.Producto;
+import com.curso.ecommerce.model.Usuario;
+import com.curso.ecommerce.service.IUsuarioService;
 import com.curso.ecommerce.service.ProductoService;
 import java.util.ArrayList;
 import java.util.List;
@@ -26,6 +28,9 @@ public class HomeController {
     
     @Autowired
     private ProductoService productoService;
+    
+    @Autowired
+    private IUsuarioService usuarioService;
     
     //Para almacenar los detalles de la orden
     List<DetalleOrden> detalles = new ArrayList<>();
@@ -121,8 +126,13 @@ public class HomeController {
      }
      
      @GetMapping("/order")
-     public String order(){
+     public String order(Model model){
          
+         Usuario usuario = usuarioService.findById(1).get();
+         
+         model.addAttribute("cart", detalles);
+         model.addAttribute("orden", orden);
+         model.addAttribute("usuario", usuario);
          return "usuario/resumenorden";
      }
 }
