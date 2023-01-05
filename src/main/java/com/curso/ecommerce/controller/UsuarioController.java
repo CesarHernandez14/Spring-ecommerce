@@ -1,8 +1,11 @@
 package com.curso.ecommerce.controller;
 
 
+import com.curso.ecommerce.model.Orden;
 import com.curso.ecommerce.model.Usuario;
 import com.curso.ecommerce.service.IUsuarioService;
+import com.curso.ecommerce.service.OrdenService;
+import java.util.List;
 import java.util.Optional;
 import javax.servlet.http.HttpSession;
 import org.slf4j.*;
@@ -21,6 +24,9 @@ public class UsuarioController {
     
     @Autowired
     private IUsuarioService usuarioService;
+    
+    @Autowired
+    private OrdenService ordenService;
     
     @GetMapping("/registro")
     public String create(){
@@ -66,6 +72,10 @@ public class UsuarioController {
     @GetMapping("/compras")
     public String obtenerCompras(Model model, HttpSession session){
         model.addAttribute("sesion", session.getAttribute("idusuario"));
+        Usuario usuario = usuarioService.findById(Integer.parseInt(session.getAttribute("idusuario").toString())).get();
+        List<Orden> ordenes = ordenService.findByUsuario(usuario);
+        
+        model.addAttribute("ordenes", ordenes);
         return "usuario/compras";
     }
 }
